@@ -1,5 +1,10 @@
 <?php
 
+function h($str){
+  $string = htmlspecialchars($str,ENT_QUOTES,'UTF-8');
+  return $string;
+}
+
 function dd($var){
   var_dump($var);
   exit();
