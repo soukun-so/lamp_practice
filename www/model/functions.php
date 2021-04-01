@@ -31,6 +31,7 @@ function get_file($name){
   return array();
 }
 
+//セッションに名前が存在するかどうか
 function get_session($name){
   if(isset($_SESSION[$name]) === true){
     return $_SESSION[$name];
@@ -72,6 +73,7 @@ function get_messages(){
   return $messages;
 }
 
+//返ってきたものが空かどうかの判別
 function is_logined(){
   return get_session('user_id') !== '';
 }

@@ -1,16 +1,21 @@
 <?php
+//定数、関数、ユーザーとアイテムのDB操作ファイルの読み込み
 require_once '../conf/const.php';
 require_once MODEL_PATH . 'functions.php';
 require_once MODEL_PATH . 'user.php';
 require_once MODEL_PATH . 'item.php';
 
+//セッションの開始
 session_start();
 
+//ユーザIDがセッションになければログイン画面にリダイレクト
 if(is_logined() === false){
   redirect_to(LOGIN_URL);
 }
 
+//BD接続用
 $db = get_db_connect();
+
 
 $user = get_login_user($db);
 
