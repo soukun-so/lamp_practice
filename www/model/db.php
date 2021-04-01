@@ -42,7 +42,7 @@ function execute_query($db, $sql,$cart_id, $params = array()){
   try{
     $statement = $db->prepare($sql);
 
-    bindvalue(1,$cart_id,PDO::PARAM_INT)
+    $statement->bindvalue(1,$cart_id,PDO::PARAM_INT);
 
     return $statement->execute($params);
   }catch(PDOException $e){
