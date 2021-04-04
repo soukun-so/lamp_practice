@@ -118,6 +118,42 @@ function purchase_carts($db, $carts){
   delete_user_carts($db, $carts[0]['user_id']);
 }
 
+function insert_buyitem($db,$carts){
+  foreach($carts as $cart){
+    $sql = "
+      INSERT INTO buy_history
+        (user_id,created)
+      VALUES
+        ('{$cart['user_id']}',NOW())
+    ";
+
+    execute_query($db, $sql);
+
+    $sql = "SELECT LAST_INSERT_ID()";
+    $last = fetch_all_query($db, $sql);
+
+    $sql = "
+      INSERT INTO buy_amount
+        (order_num,	item_num, amount)
+      VALUES
+        ({$last['0']['LAST_INSERT_ID()']},'{$cart['item_id']}','{$cart['amount']}')
+    ";
+
+    execute_query($db, $sql);
+
+    $sql = "
+      INSERT INTO item_details
+        (order_num,	item_num , item_name ,item_value)
+      VALUES
+        ({$last['0']['LAST_INSERT_ID()']}, '{$cart['item_id']}', '{$cart['name']}', '{$cart['price']}')
+    ";
+
+    execute_query($db, $sql);
+  }
+
+  
+}
+
 function delete_user_carts($db, $user_id){
   $sql = "
     DELETE FROM
