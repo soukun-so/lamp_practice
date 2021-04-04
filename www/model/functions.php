@@ -12,6 +12,7 @@ function redirect_to($url){
 
 session_start();
 
+//ココ
 function get_csrf_token(){
   // get_random_string()はユーザー定義関数。
   $token = substr(str_shuffle('1234567890abcdefghijklmnopqrstuvwxyz'), 0, 30);
