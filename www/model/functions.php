@@ -10,6 +10,16 @@ function redirect_to($url){
   exit;
 }
 
+session_start();
+
+function get_csrf_token(){
+  // get_random_string()はユーザー定義関数。
+  $token = substr(str_shuffle('1234567890abcdefghijklmnopqrstuvwxyz'), 0, 30);
+  // set_session()はユーザー定義関数。
+  $_SESSION['csrf_token'] = $token;
+  return $token;
+}
+
 function get_get($name){
   if(isset($_GET[$name]) === true){
     return $_GET[$name];
