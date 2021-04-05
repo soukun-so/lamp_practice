@@ -21,6 +21,14 @@ function get_csrf_token(){
   return $token;
 }
 
+function is_valid_csrf_token($token){
+  if($token === '') {
+    return false;
+  }
+  // get_session()はユーザー定義関数
+  return $token === get_session('csrf_token');
+}
+
 function get_get($name){
   if(isset($_GET[$name]) === true){
     return $_GET[$name];
