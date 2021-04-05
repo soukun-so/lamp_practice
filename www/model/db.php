@@ -41,19 +41,6 @@ function fetch_all_query($db, $sql, $params = array()){
 function execute_query($db, $sql,$cart_id, $params = array()){
   try{
     $statement = $db->prepare($sql);
-
-    $statement->bindvalue(1,$cart_id,PDO::PARAM_INT);
-
-    return $statement->execute($params);
-  }catch(PDOException $e){
-    set_error('更新に失敗しました。');
-  }
-  return false;
-}
-
-function execute_query2($db, $sql, $params = array()){
-  try{
-    $statement = $db->prepare($sql);
     return $statement->execute($params);
   }catch(PDOException $e){
     set_error('更新に失敗しました。');
