@@ -22,6 +22,9 @@ function get_csrf_token(){
 }
 
 function is_valid_csrf_token($token){
+  //var_dump($token, get_session('csrf_token'));
+  //exit;
+
   if($token === '') {
     return false;
   }
