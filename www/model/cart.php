@@ -118,37 +118,56 @@ function purchase_carts($db, $carts){
   delete_user_carts($db, $carts[0]['user_id']);
 }
 
-function insert_buyitem($db,$carts){
-  foreach($carts as $cart){
+//購入履歴
+function Purchase_history($db, $carts, $user){
+  $db->beginTransaction();
+  if(Purchase_history_sql($db, $carts, $user)){
+    $db->commit();
+    return true;
+  }
+  $db->rollback();
+  return false;  
+}
+
+function Purchase_history_sql($db,$carts,$user){
     $sql = "
       INSERT INTO buy_history
         (user_id,created)
       VALUES
-        ('{$cart['user_id']}',NOW())
+        (?,NOW())
     ";
 
-    execute_query($db, $sql);
+    execute_query($db, $sql, [$user['user_id']]);
 
-    $sql = "SELECT LAST_INSERT_ID()";
-    $last = fetch_all_query($db, $sql);
+      $sql = "SELECT LAST_INSERT_ID()";
+      $last = fetch_all_query($db, $sql);
+      foreach($carts as $cart){
+        $last_name = $cart['name'];
+      }
+    
+  foreach($carts as $cart){
 
     $sql = "
       INSERT INTO buy_amount
         (order_num,	item_num, amount)
       VALUES
-        ({$last['0']['LAST_INSERT_ID()']},'{$cart['item_id']}','{$cart['amount']}')
+        (?, ?, ?)
     ";
 
-    execute_query($db, $sql);
+    execute_query($db, $sql, [$last['0']['LAST_INSERT_ID()'], $cart['item_id'], $cart['amount']]);
 
     $sql = "
       INSERT INTO item_details
         (order_num,	item_num , item_name ,item_value)
       VALUES
-        ({$last['0']['LAST_INSERT_ID()']}, '{$cart['item_id']}', '{$cart['name']}', '{$cart['price']}')
+        (?, ?, ?, ?)
     ";
 
-    execute_query($db, $sql);
+    if ($last_name === $cart['name']){
+      return execute_query($db, $sql, [$last['0']['LAST_INSERT_ID()'], $cart['item_id'], $cart['name'], $cart['price']]);
+    } else {
+      execute_query($db, $sql, [$last['0']['LAST_INSERT_ID()'], $cart['item_id'], $cart['name'], $cart['price']]);
+    }
   }
 
   

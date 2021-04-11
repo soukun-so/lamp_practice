@@ -6,14 +6,18 @@ CREATE TABLE buy_history (
 );
 
 CREATE TABLE buy_amount (
+    Processing_number int(11) AUTO_INCREMENT,
     order_num int(11),
     item_num int(11),
-    amount int(11)
+    amount int(11),
+    PRIMARY KEY (Processing_number)
 );
 
 CREATE TABLE item_details (
+    Processing_number int(11) AUTO_INCREMENT,
     order_num int(11),
     item_num int(11),
     item_name VARCHAR(100),
-    item_value VARCHAR(100)
+    item_value int(11),
+    PRIMARY KEY (Processing_number)
 );
