@@ -13,6 +13,12 @@ if(is_logined() === false){
   redirect_to(LOGIN_URL);
 }
 
+
+if ((is_valid_csrf_token(get_post('token'))) === false){
+  set_error('不正なアクセスです');
+  redirect_to(HOME_URL);
+}
+
 //BD接続用
 $db = get_db_connect();
 
