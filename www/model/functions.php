@@ -1,5 +1,10 @@
 <?php
 
+function h($str){
+  $string = htmlspecialchars($str,ENT_QUOTES,'UTF-8');
+  return $string;
+}
+
 function dd($var){
   var_dump($var);
   exit();
@@ -8,6 +13,28 @@ function dd($var){
 function redirect_to($url){
   header('Location: ' . $url);
   exit;
+}
+
+session_start();
+
+//ココ
+function get_csrf_token(){
+  // get_random_string()はユーザー定義関数。
+  $token = substr(str_shuffle('1234567890abcdefghijklmnopqrstuvwxyz'), 0, 30);
+  // set_session()はユーザー定義関数。
+  $_SESSION['csrf_token'] = $token;
+  return $token;
+}
+
+function is_valid_csrf_token($token){
+  //var_dump($token, get_session('csrf_token'));
+  //exit;
+
+  if($token === '') {
+    return false;
+  }
+  // get_session()はユーザー定義関数
+  return $token === get_session('csrf_token');
 }
 
 function get_get($name){
@@ -31,6 +58,7 @@ function get_file($name){
   return array();
 }
 
+//セッションに名前が存在するかどうか
 function get_session($name){
   if(isset($_SESSION[$name]) === true){
     return $_SESSION[$name];
@@ -72,6 +100,7 @@ function get_messages(){
   return $messages;
 }
 
+//返ってきたものが空かどうかの判別
 function is_logined(){
   return get_session('user_id') !== '';
 }
