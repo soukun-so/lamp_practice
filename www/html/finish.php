@@ -26,7 +26,7 @@ if(purchase_carts($db, $carts) === false){
   redirect_to(CART_URL);
 }
 
-Purchase_history($db,$carts,$user);
+write_purchase_history($db,$carts,$user);
 
 $total_price = sum_carts($carts);
 

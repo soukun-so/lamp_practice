@@ -62,7 +62,7 @@
         </thead>
         <tbody>
           <?php foreach($items as $item){ ?>
-          <tr class="<?php print(is_open($item) ? '' : 'close_item'); ?>">
+          <tr class="close_item">
             <td><img src="<?php print (h(IMAGE_PATH . $item['image']));?>" class="item_image"></td>
             <td><?php print (h($item['name'])); ?></td>
             <td><?php print (h(number_format($item['price']))); ?>円</td>

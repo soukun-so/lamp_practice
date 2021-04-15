@@ -12,15 +12,18 @@ if(is_logined() === false){
 
 $db = get_db_connect();
 $user = get_login_user($db);
+$order_id = get_post('order_id'); 
 
 if ($user['user_id'] === 4){
-  $histories = get_all_purchase_history($db, $user);
+  $histories = get_allpurchase_history_detail($db, $user, $order_id);
 } else {
-  $histories = get_purchase_history($db, $user);
+  $histories = get_purchase_history_detail($db, $user, $order_id);
 }
 
-$histories = array_reverse($histories);
+foreach ($histories as $history){
+  $sumprice += $history['item_price']*$history['amount'];
+}
 
 $token = get_csrf_token();
 
-include_once VIEW_PATH . 'purchase_history_view.php';
+include_once VIEW_PATH . 'purchase_historydetail_view.php';

@@ -119,19 +119,22 @@ function purchase_carts($db, $carts){
 }
 
 //購入履歴
-function Purchase_history($db, $carts, $user){
+function write_purchase_history($db, $carts, $user){
   $db->beginTransaction();
-  if(Purchase_history_sql($db, $carts, $user)){
+  try{
+    write_purchase_history_sql($db, $carts, $user);
     $db->commit();
     return true;
-  }
-  $db->rollback();
-  return false;  
+  } catch(PDOException $e) {
+    set_error('購入データ登録に失敗しました。');
+    $db->rollback();
+    return false; 
+  } 
 }
 
-function Purchase_history_sql($db,$carts,$user){
+function write_purchase_history_sql($db,$carts,$user){
     $sql = "
-      INSERT INTO buy_history
+      INSERT INTO orders
         (user_id,created)
       VALUES
         (?,NOW())
@@ -148,25 +151,16 @@ function Purchase_history_sql($db,$carts,$user){
   foreach($carts as $cart){
 
     $sql = "
-      INSERT INTO buy_amount
-        (order_num,	item_num, amount)
-      VALUES
-        (?, ?, ?)
-    ";
-
-    execute_query($db, $sql, [$last['0']['LAST_INSERT_ID()'], $cart['item_id'], $cart['amount']]);
-
-    $sql = "
-      INSERT INTO item_details
-        (order_num,	item_num , item_name ,item_value)
+      INSERT INTO order_items
+        (order_id, amount, item_name, item_price)
       VALUES
         (?, ?, ?, ?)
     ";
 
     if ($last_name === $cart['name']){
-      return execute_query($db, $sql, [$last['0']['LAST_INSERT_ID()'], $cart['item_id'], $cart['name'], $cart['price']]);
+      return execute_query($db, $sql, [$last['0']['LAST_INSERT_ID()'], $cart['amount'], $cart['name'], $cart['price']]);
     } else {
-      execute_query($db, $sql, [$last['0']['LAST_INSERT_ID()'], $cart['item_id'], $cart['name'], $cart['price']]);
+      execute_query($db, $sql, [$last['0']['LAST_INSERT_ID()'], $cart['amount'], $cart['name'], $cart['price']]);
     }
   }
 
