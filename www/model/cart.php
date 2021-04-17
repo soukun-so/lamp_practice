@@ -118,6 +118,55 @@ function purchase_carts($db, $carts){
   delete_user_carts($db, $carts[0]['user_id']);
 }
 
+//購入履歴
+function write_purchase_history($db, $carts, $user){
+  $db->beginTransaction();
+  try{
+    write_purchase_history_sql($db, $carts, $user);
+    $db->commit();
+    return true;
+  } catch(PDOException $e) {
+    set_error('購入データ登録に失敗しました。');
+    $db->rollback();
+    return false; 
+  } 
+}
+
+function write_purchase_history_sql($db,$carts,$user){
+    $sql = "
+      INSERT INTO orders
+        (user_id,created)
+      VALUES
+        (?,NOW())
+    ";
+
+    execute_query($db, $sql, [$user['user_id']]);
+
+      $sql = "SELECT LAST_INSERT_ID()";
+      $last = fetch_query($db, $sql);
+      foreach($carts as $cart){
+        $last_name = $cart['name'];
+      }
+    
+  foreach($carts as $cart){
+
+    $sql = "
+      INSERT INTO order_items
+        (order_id, amount, item_name, item_price)
+      VALUES
+        (?, ?, ?, ?)
+    ";
+
+    if ($last_name === $cart['name']){
+      return execute_query($db, $sql, [$last['LAST_INSERT_ID()'], $cart['amount'], $cart['name'], $cart['price']]);
+    } else {
+      execute_query($db, $sql, [$last['LAST_INSERT_ID()'], $cart['amount'], $cart['name'], $cart['price']]);
+    }
+  }
+
+  
+}
+
 function delete_user_carts($db, $user_id){
   $sql = "
     DELETE FROM
