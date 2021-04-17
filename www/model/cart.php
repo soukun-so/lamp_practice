@@ -143,7 +143,7 @@ function write_purchase_history_sql($db,$carts,$user){
     execute_query($db, $sql, [$user['user_id']]);
 
       $sql = "SELECT LAST_INSERT_ID()";
-      $last = fetch_all_query($db, $sql);
+      $last = fetch_query($db, $sql);
       foreach($carts as $cart){
         $last_name = $cart['name'];
       }
@@ -158,9 +158,9 @@ function write_purchase_history_sql($db,$carts,$user){
     ";
 
     if ($last_name === $cart['name']){
-      return execute_query($db, $sql, [$last['0']['LAST_INSERT_ID()'], $cart['amount'], $cart['name'], $cart['price']]);
+      return execute_query($db, $sql, [$last['LAST_INSERT_ID()'], $cart['amount'], $cart['name'], $cart['price']]);
     } else {
-      execute_query($db, $sql, [$last['0']['LAST_INSERT_ID()'], $cart['amount'], $cart['name'], $cart['price']]);
+      execute_query($db, $sql, [$last['LAST_INSERT_ID()'], $cart['amount'], $cart['name'], $cart['price']]);
     }
   }
 
