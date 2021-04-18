@@ -15,7 +15,7 @@ $user = get_login_user($db);
 
 $items = get_open_items($db);
 
-$rankings = get_item_ranking($db);
+$rankings = get_ranking_items($db);
 
 $token = get_csrf_token();
 

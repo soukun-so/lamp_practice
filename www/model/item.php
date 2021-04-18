@@ -51,7 +51,7 @@ function get_open_items($db){
   return get_items($db, true);
 }
 
-function get_item_ranking($db){
+function get_ranking_items($db){
     $sql = '
     SELECT
         item_id, 

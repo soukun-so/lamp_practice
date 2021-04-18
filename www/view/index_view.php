@@ -57,9 +57,9 @@
           </tr>
         </thead>
         <tbody>
-          <?php foreach($rankings as $ranking){ ?>
+          <?php foreach($rankings as $index => $ranking){ ?>
           <tr>
-            <td><p><?php print $rank += 1;?></p></td>
+            <td><p><?php print ($index + 1);?></p></td>
             <td><img src="<?php print (h(IMAGE_PATH . $ranking['image']));?>" style="width: 200px"></td>
             <td><?php print(h($ranking['name'])); ?></td>
             <td><?php print (h(number_format($ranking['price']))); ?>円</td>
@@ -79,7 +79,7 @@
         </tbody>
       </table>
     <?php } else { ?>
-      <p>カートに商品はありません。</p>
+      <p>ランキングはありません</p>
     <?php } ?> 
 
   </div>
